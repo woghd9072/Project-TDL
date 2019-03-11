@@ -4,3 +4,14 @@
 ### [Day1](https://github.com/woghd9072/Project-TDL/tree/master/Project-TDL)
 - Gradle Project로 생성
 - ToDo domain 생성
+
+### [Day2]()
+- domain(ToDoList), repository(ToDoListRepository) 생성
+- MySQL 연동 (문제점 발생)
+  1. TimeZone 오류 : url: jdbc:mysql://127.0.0.1:3306/db?serverTimezone=Asia/Seoul로 수정시 오류 해결!!
+- CommandLineRunner로 DB 생성
+- controller 생성
+  - 서비스 호출 및 뷰 생성
+- service 생성
+  - 저장소 호출 및 데이터 반환
+- list.html 생성
