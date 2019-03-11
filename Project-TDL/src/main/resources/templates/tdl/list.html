@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>To Do List</title>
+</head>
+<body>
+    <h1>Hello To Do List</h1>
+    <div class="container">
+        <div class="page-header">
+            <h3>리스트 목록</h3>
+        </div>
+        <br/><br/><br/>
+        <div id="mainHide">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th class="col-md-1">#</th>
+                    <th class="col-md-2">완료 여부</th>
+                    <th class="col-md-5">내용</th>
+                    <th class="col-md-2">생성 날짜</th>
+                    <th class="col-md-2">완료 날짜</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="tdl : ${tdlList}">
+                    <td th:text="${tdl.idx}"></td>
+                    <td th:text="${tdl.status}"></td>
+                    <td th:text="${tdl.description}"></td>
+                    <td th:text="${tdl.createdDate} ? ${#temporals.format(tdl.createdDate,'yyyy-MM-dd HH:mm')} : ${tdl.createdDate}"></td>
+                    <td th:text="${tdl.completedDate} ? ${#temporals.format(tdl.completedDate,'yyyy-MM-dd HH:mm')} : ${tdl.completedDate}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <br/>
+    </div>
+</body>
+</html>

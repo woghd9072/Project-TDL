@@ -1,6 +1,16 @@
 # Project-TDL
 스프링부트를 이용하여 ToDoList 만들기
 
+|도구|버전|
+|:---:|:---:|
+|Spring|Spring boot 2.1.3|
+|OS|Window 10|
+|IDE|IntelliJ|
+|JDK|JDK 8|
+|DB|MySQL|
+|Build Tool|Gradle 5.2.1|
+
+
 ### [Day1](https://github.com/woghd9072/Project-TDL/tree/master/Project-TDL)
 - Gradle Project로 생성
 - ToDo domain 생성
