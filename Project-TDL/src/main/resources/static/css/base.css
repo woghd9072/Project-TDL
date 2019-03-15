@@ -1,8 +1,15 @@
 * {
     margin: 0px;
 }
-body {
-    background-color: #f6f8fa!important;
+html{
+    position: relative;
+    min-height: 100%;
+}
+body{
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f6f8fa;
 }
 .register {
     margin-top: 3%;
@@ -28,6 +35,7 @@ input {
     width: 55%;
     margin-top: 3%;
     display: flex;
+    margin-bottom: 3%;
 }
 #column-left {
     flex: 4;
@@ -53,7 +61,6 @@ input {
     text-align: center;
 }
 .head {
-
     font-size: 30px;
     color: white;
     font-family: 'Sniglet', cursive;
@@ -63,5 +70,17 @@ input {
 }
 #status {
     padding-top: 14px;
+}
+footer {
+    background-color: black;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    font-family: 'Sniglet', cursive;
+    font-size: 20px;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
 }
 

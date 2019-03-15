@@ -19,17 +19,17 @@ public class BootApplication {
         SpringApplication.run(BootApplication.class, args);
     }
 
-    @Bean
-    public CommandLineRunner runner(ToDoListRepository toDoListRepository) {
-        return args -> {
-            IntStream.rangeClosed(1, 20).forEach(index ->
-                    toDoListRepository.save(ToDoList.builder()
-                        .description("To Do List by Spring Boot"+index)
-                        .status(true)
-                        .createdDate(LocalDateTime.now())
-                        .build()));
-        };
-    }
+//    @Bean
+//    public CommandLineRunner runner(ToDoListRepository toDoListRepository) {
+//        return args -> {
+//            IntStream.rangeClosed(1, 20).forEach(index ->
+//                    toDoListRepository.save(ToDoList.builder()
+//                        .description("To Do List by Spring Boot"+index)
+//                        .status(true)
+//                        .createdDate(LocalDateTime.now())
+//                        .build()));
+//        };
+//    }
 
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
