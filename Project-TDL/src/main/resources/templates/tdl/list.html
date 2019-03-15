@@ -2,38 +2,38 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>To Do List</title>
+    <title>Project-TDL</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Sniglet" rel="stylesheet">
 </head>
 <body>
-    <h1>Hello To Do List</h1>
-    <div class="container">
-        <div class="page-header">
-            <h3>리스트 목록</h3>
-        </div>
-        <br/><br/><br/>
-        <div id="mainHide">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th class="col-md-1">#</th>
-                    <th class="col-md-2">완료 여부</th>
-                    <th class="col-md-5">내용</th>
-                    <th class="col-md-2">생성 날짜</th>
-                    <th class="col-md-2">완료 날짜</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="tdl : ${tdlList}">
-                    <td th:text="${tdl.idx}"></td>
-                    <td th:text="${tdl.status}"></td>
-                    <td th:text="${tdl.description}"></td>
-                    <td th:text="${tdl.createdDate} ? ${#temporals.format(tdl.createdDate,'yyyy-MM-dd HH:mm')} : ${tdl.createdDate}"></td>
-                    <td th:text="${tdl.completedDate} ? ${#temporals.format(tdl.completedDate,'yyyy-MM-dd HH:mm')} : ${tdl.completedDate}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <br/>
+<header class="headers">
+    <span class="head">
+        <img id="image" src="/image/home.png" width="50px">
+        <span>To Do List</span>
+    </span>
+</header>
+<div class="wrapper">
+    <div class="register">
+        <form action="/tdl" method="post">
+            <input id="bar" type="text" name="description" style="background-color:transparent;" maxlength="35">
+            <input id="insert" type="submit" value="등록">
+        </form>
     </div>
+    <div class="container" th:each="tdl : ${tdlList}">
+        <div id="column-left">
+            <h1 th:text="${tdl.description}"></h1>
+            <p id="date" th:text="${tdl.createdDate} ? ${#temporals.format(tdl.createdDate,'yyyy-MM-dd')} : ${tdl.createdDate}"></p>
+        </div>
+        <div id="column-right">
+            <h1 class="icon">
+                <button><i class="material-icons md-30">edit</i></button>
+                <button i class="material-icons md-30">delete_forever</button></i>
+            </h1>
+            <p id="status" th:text="${tdl.status}"></p>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -3,7 +3,7 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/TDL?serverTimezone=Asia/Seoul
     username: tdl_user
     password: 1q2w3e4r!
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: create

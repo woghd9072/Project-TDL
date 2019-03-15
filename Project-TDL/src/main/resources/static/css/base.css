@@ -1,0 +1,67 @@
+* {
+    margin: 0px;
+}
+body {
+    background-color: #f6f8fa!important;
+}
+.register {
+    margin-top: 3%;
+}
+form {
+    text-align: center;
+}
+input {
+    border: 1px solid black;
+    padding: 1%;
+    border-radius: 5px;
+}
+#bar {
+    width: 35%;
+}
+.container {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2%;
+    width: 55%;
+    margin-top: 3%;
+    display: flex;
+}
+#column-left {
+    flex: 4;
+}
+#column-right {
+    flex: 1;
+    text-align: right;
+}
+#horizen {
+    width: 63%;
+}
+.material-icons.md-30 {
+    font-size: 30px;
+}
+#date {
+    color: lightgray;
+    padding-top: 3%;
+}
+.headers {
+    background-color: black;
+    padding: 10px;
+    color: white;
+    text-align: center;
+}
+.head {
+
+    font-size: 30px;
+    color: white;
+    font-family: 'Sniglet', cursive;
+}
+#image {
+    text-align: left;
+}
+#status {
+    padding-top: 14px;
+}
+

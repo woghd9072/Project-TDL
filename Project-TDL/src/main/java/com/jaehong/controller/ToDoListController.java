@@ -1,12 +1,13 @@
 package com.jaehong.controller;
 
-import com.jaehong.repository.ToDoListRepository;
+import com.jaehong.domain.ToDoList;
 import com.jaehong.service.ToDoListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/tdl")
@@ -20,4 +21,12 @@ public class ToDoListController {
         model.addAttribute("tdlList", toDoListService.findList());
         return "/tdl/list";
     }
+
+    @PostMapping
+    public String posttdl(@RequestBody String description) {
+        toDoListService.postService(description);
+        return "redirect:/tdl/list";
+    }
+
+    
 }
