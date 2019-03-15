@@ -28,3 +28,8 @@
 - 부트스트랩 적용시키기(css 활용)
   - `<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>`
     `<link rel="stylesheet" href="/css/bootstrap.min.css"/>`
+
+### Day3
+- 부트스트랩 대신 css를 만들어 사용
+- form 태그를 사용해서 등록 창 만듬
+- 등록하기 성공(한글 인코딩 실패)
