@@ -32,4 +32,18 @@
 ### Day3
 - 부트스트랩 대신 css를 만들어 사용
 - form 태그를 사용해서 등록 창 만듬
-- 등록하기 성공(한글 인코딩 실패)
+- 등록하기 성공
+
+### Day4
+- 삭제 기능 구현
+  - 각 객체의 현재의 idx값을 받아 오기 위해 `var data = $(this).val();`을 사용
+
+### Day5
+- Status 변환 구현
+  - 클릭시 아이콘을 바꾸고 CompleteDate도 찍히게 만듬
+
+### Day6
+- 수정 기능 구현
+  - 수정할 값을 받아 오기 위해 `$(this).parent().parent().parent().find('.description')`을 사용
+  - 수정 버튼 클릭시 `contenteditable` 활성화 & 텍스트에 `focus`를 맞춤
+  - 다시 버튼 클릭시 `contenteditable` 비활성화 후에 변경내용 전송
