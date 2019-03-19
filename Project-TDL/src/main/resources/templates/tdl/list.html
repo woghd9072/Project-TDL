@@ -16,27 +16,115 @@
 </header>
 <div class="wrapper">
     <div class="register">
-        <form action="/tdl" method="post">
-            <input id="bar" type="text" name="description" style="background-color:transparent;" maxlength="35">
-            <input id="insert" type="submit" value="등록">
+        <form onsubmit="return false">
+            <input id="bar" type="text" style="background-color:transparent;" maxlength="35" value="Enter the Sentence" onclick="this.value='';">
+            <input id="insert" type="submit" value="Post">
         </form>
     </div>
     <div class="container" th:each="tdl : ${tdlList}">
-        <div id="column-left">
-            <h1 th:text="${tdl.description}"></h1>
-            <p id="date" th:text="${tdl.createdDate} ? ${#temporals.format(tdl.createdDate,'yyyy-MM-dd')} : ${tdl.createdDate}"></p>
+        <div class="column-left">
+            <h1 class="description" th:text="${tdl.description}" th:if="!${tdl.status}" contenteditable="false" th:maxlength="35"></h1>
+            <p class="date" th:text="${tdl.createdDate} ? ${#temporals.format(tdl.createdDate,'yyyy-MM-dd')} : ${tdl.createdDate}"></p>
         </div>
-        <div id="column-right">
+        <div class="column-right">
             <h1 class="icon">
-                <button><i class="material-icons md-30">edit</i></button>
-                <button i class="material-icons md-30">delete_forever</button></i>
+                <button class="status" th:value="${tdl.idx}" th:if="${tdl.status}"><i class="material-icons md-30">done_all</i></button>
+                <button class="status" th:value="${tdl.idx}" th:if="!${tdl.status}"><i class="material-icons md-30">done</i></button>
+                <button class="update" th:value="${tdl.idx}" th:if="!${tdl.status}"><i class="material-icons md-30">edit</i></button>
+                <button class="delete" th:value="${tdl.idx}"><i class="material-icons md-30">delete</i></button>
             </h1>
-            <p id="status" th:text="${tdl.status}"></p>
+            <p class="date" th:if="${tdl.status}" th:text="${tdl.completedDate} ? ${#temporals.format(tdl.completedDate,'yyyy-MM-dd')} : ${tdl.completedDate}"></p>
         </div>
     </div>
 </div>
 <footer>
-    <p>Copyright@2019 All Rights Reserved.</p>
+    <p>Copyright@2019 J.H.Shin All Rights Reserved.</p>
 </footer>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script>
+    $('#insert').click(function () {
+        var jsonData = JSON.stringify({
+            description: $('#bar').val(),
+            status: null,
+            createdDate: null,
+            completedDate: null
+        });
+        $.ajax({
+            url: "/tdl",
+            type: "POST",
+            data: jsonData,
+            contentType: "application/json",
+            dataType: "json",
+            success: function () {
+                location.href = '/tdl/list';
+            },
+            error: function () {
+                alert('Nope!');
+            }
+        });
+    });
+</script>
+<script>
+    $('.delete').click(function () {
+        var data = $(this).val();
+        $.ajax({
+            url: "/tdl/" + data,
+            type: "DELETE",
+            success: function () {
+                location.href = '/tdl/list';
+            },
+            error: function () {
+                alert('Nope!');
+            }
+        });
+    });
+</script>
+<script>
+    var s = 1;
+    $('.update').click(function () {
+        if (s===1) {
+            $(this).parent().parent().parent().find('.description').attr('contenteditable', true);
+            $(this).parent().parent().parent().find('.description').trigger('focus');
+            s = 2;
+        }
+        if (s===2) {
+            $('.update').click(function () {
+                var data = $(this).val();
+                var des = $(this).parent().parent().parent().find('.description').text();
+                $.ajax({
+                    url: "/tdl/" + data,
+                    type: "PUT",
+                    data: des,
+                    contentType: "application/json",
+                    dataType: 'text',
+                    success: function () {
+                        location.href = '/tdl/list';
+                    },
+                    error: function () {
+                        alert('Nope!');
+                    }
+                });
+                $(this).parent().parent().parent().find('.description').attr('contenteditable', false);
+                s = 1;
+            });
+        }
+    });
+</script>
+<script>
+    $('.status').click(function () {
+        var data = $(this).val();
+        $.ajax({
+            url: "/tdl/complete/" + data,
+            type: "PUT",
+            success: function () {
+                location.href = '/tdl/list';
+            },
+            error: function () {
+                alert('Nope!');
+            }
+        });
+    });
+</script>
 </body>
 </html>

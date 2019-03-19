@@ -13,8 +13,6 @@ body{
 }
 .register {
     margin-top: 3%;
-}
-form {
     text-align: center;
 }
 input {
@@ -37,10 +35,10 @@ input {
     display: flex;
     margin-bottom: 3%;
 }
-#column-left {
+.column-left {
     flex: 4;
 }
-#column-right {
+.column-right {
     flex: 1;
     text-align: right;
 }
@@ -50,7 +48,7 @@ input {
 .material-icons.md-30 {
     font-size: 30px;
 }
-#date {
+.date {
     color: lightgray;
     padding-top: 3%;
 }
@@ -59,6 +57,7 @@ input {
     padding: 10px;
     color: white;
     text-align: center;
+    width: 100%;
 }
 .head {
     font-size: 30px;
@@ -68,8 +67,11 @@ input {
 #image {
     text-align: left;
 }
-#status {
-    padding-top: 14px;
+button {
+    border: 0;
+    padding: 0;
+    outline: 0;
+    background-color: white;
 }
 footer {
     background-color: black;

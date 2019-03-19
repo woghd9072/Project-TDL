@@ -3,11 +3,12 @@ package com.jaehong.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @Entity
 @Table
@@ -38,7 +39,17 @@ public class ToDoList {
         this.completedDate = completedDate;
     }
 
-    public void setcreatedDate() {
-        this.createdDate = LocalDateTime.now();
+    public void update(String description) {
+        this.description = description;
+        this.status = this.getStatus();
+        this.createdDate = this.getCreatedDate();
+        this.completedDate = this.getCompletedDate();
+    }
+
+    public void complete(ToDoList toDoList) {
+        this.description = toDoList.getDescription();
+        this.status = true;
+        this.createdDate = toDoList.getCreatedDate();
+        this.completedDate = LocalDateTime.now();
     }
 }
