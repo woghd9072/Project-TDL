@@ -1,6 +1,11 @@
 # Project-TDL
 스프링부트를 이용하여 ToDoList 만들기
 
+## 목적
+- Spring Boot & JPA 학습 및 Web Application(To Do List) 개발
+- Spring Security 학습 및 로그인, 회원가입 구현
+
+## 개발환경(필요사항)
 |Tool|Version|
 |:---:|:---:|
 |Spring|Spring boot 2.1.3|
@@ -10,7 +15,7 @@
 |DB|MySQL|
 |Build Tool|Gradle 5.2.1|
 
-
+## Day별 진행
 ### Day1
 - Gradle Project로 생성
 - ToDo domain 생성
