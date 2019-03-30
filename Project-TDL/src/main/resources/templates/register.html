@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/base.css">
+</head>
+<body>
+<div class="register_container">
+    <div class="wr">
+        <form onsubmit="return false">
+            <table>
+                <tr>
+                    <td><label>ID</label></td>
+                    <td><input type="text" id="id"></td>
+                </tr>
+                <tr>
+                    <td><label>PW</label></td>
+                    <td><input type="password" id="pwd"></td>
+                </tr>
+                <tr>
+                    <td><label>Email</label></td>
+                    <td><input type="text" id="email"></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: center"><input id="signup" type="submit" value="Sign Up"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script>
+    $('#signup').click(function () {
+        var userData = JSON.stringify({
+            id: $('#id').val(),
+            pwd: $('#pwd').val(),
+            email: $('#email').val()
+        });
+        $.ajax({
+            url: "/register",
+            type: "POST",
+            data: userData,
+            contentType: "application/json",
+            dataType: "json",
+            success: function () {
+                location.href = '/login';
+            },
+            error: function () {
+                alert('Nope!');
+            }
+        });
+    });
+</script>
+</body>
+</html>
