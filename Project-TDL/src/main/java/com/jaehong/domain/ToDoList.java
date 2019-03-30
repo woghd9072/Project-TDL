@@ -1,18 +1,18 @@
 package com.jaehong.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @Entity
 @Table
-public class ToDoList {
+public class ToDoList implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +31,16 @@ public class ToDoList {
     @Column
     private LocalDateTime completedDate;
 
+    @ManyToOne
+    private User user;
+
     @Builder
-    public ToDoList(String description, Boolean status, LocalDateTime createdDate, LocalDateTime completedDate) {
+    public ToDoList(String description, Boolean status, LocalDateTime createdDate, LocalDateTime completedDate, User user) {
         this.description = description;
         this.status = status;
         this.createdDate = createdDate;
         this.completedDate = completedDate;
+        this.user = user;
     }
 
     public void update(String description) {
@@ -44,12 +48,6 @@ public class ToDoList {
         this.status = this.getStatus();
         this.createdDate = this.getCreatedDate();
         this.completedDate = this.getCompletedDate();
-    }
-
-    public void complete(ToDoList toDoList) {
-        this.description = toDoList.getDescription();
-        this.status = true;
-        this.createdDate = toDoList.getCreatedDate();
-        this.completedDate = LocalDateTime.now();
+        this.user = this.getUser();
     }
 }

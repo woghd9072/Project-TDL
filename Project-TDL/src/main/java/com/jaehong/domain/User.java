@@ -1,16 +1,18 @@
 package com.jaehong.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+@Setter
 @Getter
 @NoArgsConstructor
 @Entity
 @Table
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +25,22 @@ public class User {
     @Column
     private String pwd;
 
+    @Column
+    private String email;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private List<ToDoList> toDoList = new ArrayList<>();
+
     @Builder
-    public User(String id, String pwd) {
+    public User(String id, String pwd, String email, List<ToDoList> toDoList) {
         this.id = id;
         this.pwd = pwd;
+        this.email = email;
+        this.toDoList = toDoList;
+    }
+
+    public void add(ToDoList toDoLists) {
+        toDoLists.setUser(this);
+        this.toDoList.add(toDoLists);
     }
 }

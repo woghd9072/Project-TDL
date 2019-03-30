@@ -10,7 +10,7 @@
 <body>
 <header class="headers">
     <span class="head">
-        <img id="image" src="/image/home.png" width="50px">
+        <a href="/tdl/list/logout"><img id="image" src="/image/home.png" width="50px"></a>
         <span>To Do List</span>
     </span>
 </header>
@@ -23,7 +23,7 @@
     </div>
     <div class="container" th:each="tdl : ${tdlList}">
         <div class="column-left">
-            <h1 class="description" th:text="${tdl.description}" th:if="!${tdl.status}" contenteditable="false" th:maxlength="35"></h1>
+            <h1 class="description" th:text="${tdl.description}" contenteditable="false" th:maxlength="35"></h1>
             <p class="date" th:text="${tdl.createdDate} ? ${#temporals.format(tdl.createdDate,'yyyy-MM-dd')} : ${tdl.createdDate}"></p>
         </div>
         <div class="column-right">

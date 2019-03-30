@@ -1,6 +1,7 @@
 package com.jaehong.controller;
 
 import com.jaehong.domain.ToDoList;
+import com.jaehong.domain.User;
 import com.jaehong.service.ToDoListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/tdl")
 public class ToDoListController {
@@ -16,15 +19,32 @@ public class ToDoListController {
     @Autowired
     ToDoListService toDoListService;
 
+    private User currentUser;
+
     @GetMapping("/list")
     public String list(Model model) {
-        model.addAttribute("tdlList", toDoListService.findList());
+        if(currentUser == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("tdlList", toDoListService.findList(currentUser.getIdx()));
         return "/tdl/list";
+    }
+
+    @GetMapping("/list/logout")
+    public String logout() {
+        currentUser = null;
+        return "redirect:/tdl/list";
+    }
+
+    @PostMapping("/user")
+    public ResponseEntity<?> current(@RequestBody Map<String, String> map) {
+        currentUser = toDoListService.findUser(map.get("id"));
+        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> posttdl(@RequestBody ToDoList toDoList) {
-        toDoListService.postService(toDoList);
+        toDoListService.postService(toDoList, currentUser);
         return new ResponseEntity<>("{}", HttpStatus.CREATED);
     }
 
