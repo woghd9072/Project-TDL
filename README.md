@@ -110,5 +110,5 @@
 - `User` 객체에 `ToDoList` 객체를 넣어줘야함 (그냥 해줬을 때는 `User`에서 매핑이 안됬었음)
   - 백기선 유튜브를 참고하여 `User` 클래스에 `add()` 함수를 추가해줘서 List객체가 Post될 때 `add()` 함수를 써줘서 `ToDoList`에 user를 set해주고 `User`에 todolist를 set해줌
 
-### [Day13](./Security)
+### [Day13 & Day14](./Security)
 - Spring Security 관련 내용
