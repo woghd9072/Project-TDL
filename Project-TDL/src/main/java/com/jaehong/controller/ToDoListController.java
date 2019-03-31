@@ -3,9 +3,11 @@ package com.jaehong.controller;
 import com.jaehong.domain.ToDoList;
 import com.jaehong.domain.User;
 import com.jaehong.service.ToDoListService;
+import com.jaehong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,27 +21,17 @@ public class ToDoListController {
     @Autowired
     ToDoListService toDoListService;
 
+    @Autowired
+    UserService userService;
+
     private User currentUser;
 
     @GetMapping("/list")
     public String list(Model model) {
-        if(currentUser == null) {
-            return "redirect:/login";
-        }
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        currentUser = userService.findUser(user.getUsername());
         model.addAttribute("tdlList", toDoListService.findList(currentUser.getIdx()));
         return "/tdl/list";
-    }
-
-    @GetMapping("/list/logout")
-    public String logout() {
-        currentUser = null;
-        return "redirect:/tdl/list";
-    }
-
-    @PostMapping("/user")
-    public ResponseEntity<?> current(@RequestBody Map<String, String> map) {
-        currentUser = toDoListService.findUser(map.get("id"));
-        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 
     @PostMapping

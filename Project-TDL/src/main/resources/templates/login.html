@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
@@ -8,49 +8,51 @@
 <body>
     <div class="login_container">
         <div class="wr">
-            <form onsubmit="return false">
+            <form th:action="@{/login}" method="post">
                 <label>ID</label>
-                <input id="id" type="text"></br></br>
+                <input id="id" type="text" name="id"></br></br>
                 <label>PW</label>
-                <input id="pwd" type="password"></br></br>
+                <input id="pwd" type="password" name="password"></br></br>
                 <input id="signin" type="submit" value="sign in"></br></br></br>
                 <button><a href="/register">Sign Up</a></button>
             </form>
         </div>
     </div>
-<script th:src="@{/js/jquery.min.js}"></script>
-<script>
-    $('#signin').click(function () {
-        var userData = JSON.stringify({
-            id: $('#id').val(),
-            pwd: $('#pwd').val()
-        });
-        $.ajax({
-            url: "/login",
-            type: "POST",
-            data: userData,
-            contentType: "application/json",
-            dataType: "json",
-            success: function () {
-                $.ajax({
-                    url: "/tdl/user",
-                    type: "POST",
-                    data: userData,
-                    contentType: "application/json",
-                    dataType: "json",
-                    success: function () {
-                        location.href = '/tdl/list';
-                    },
-                    error: function () {
-                        alert("Nope!");
-                    }
-                });
-            },
-            error: function () {
-                alert('아이디가 틀렸거나 등록된 아이디가 없습니다');
-            }
-        });
-    });
-</script>
+<!--<script th:src="@{/js/jquery.min.js}"></script>-->
+<!--<script>-->
+    <!--$('#signin').click(function () {-->
+        <!--var userData = JSON.stringify({-->
+            <!--id: $('#id').val(),-->
+            <!--pwd: $('#pwd').val()-->
+        <!--});-->
+        <!--alert(userData);-->
+        <!--$.ajax({-->
+            <!--url: "/login",-->
+            <!--type: "POST",-->
+            <!--data: userData,-->
+            <!--contentType: "application/json",-->
+            <!--dataType: "json",-->
+            <!--success: function () {-->
+                <!--location.href = '/tdl/list'-->
+                <!--// $.ajax({-->
+                <!--//     url: "/tdl/user",-->
+                <!--//     type: "POST",-->
+                <!--//     data: userData,-->
+                <!--//     contentType: "application/json",-->
+                <!--//     dataType: "json",-->
+                <!--//     success: function () {-->
+                <!--//         location.href = '/tdl/list';-->
+                <!--//     },-->
+                <!--//     error: function () {-->
+                <!--//         alert("Nope!");-->
+                <!--//     }-->
+                <!--// });-->
+            <!--},-->
+            <!--error: function () {-->
+                <!--alert('아이디가 틀렸거나 등록된 아이디가 없습니다');-->
+            <!--}-->
+        <!--});-->
+    <!--});-->
+<!--</script>-->
 </body>
 </html>

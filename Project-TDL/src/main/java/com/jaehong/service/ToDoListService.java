@@ -16,15 +16,8 @@ public class ToDoListService {
     @Autowired
     ToDoListRepository toDoListRepository;
 
-    @Autowired
-    UserRepository userRepository;
-
     public List<ToDoList> findList(Integer idx) {
         return toDoListRepository.findByUserIdx(idx);
-    }
-
-    public User findUser(String id) {
-        return userRepository.findById(id);
     }
 
     public ToDoList postService(ToDoList toDoList, User currentUser) {
