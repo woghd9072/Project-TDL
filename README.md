@@ -112,3 +112,98 @@
 
 ### [Day13 & Day14](./Security)
 - Spring Security 관련 내용
+
+### Day15
+- 본격적인 Spring Security 적용하기
+  - `build.gradle` 수정
+    ~~~
+    dependencies {
+      implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+      implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+      implementation 'org.springframework.boot:spring-boot-starter-web'
+      compile 'org.springframework.security:spring-security-config'
+      compile("org.springframework.boot:spring-boot-starter-security")
+      compileOnly 'org.projectlombok:lombok'
+      runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+      runtimeOnly 'mysql:mysql-connector-java'
+      annotationProcessor 'org.projectlombok:lombok'
+      testImplementation 'org.springframework.boot:spring-boot-starter-test'
+      testCompile("org.springframework.security:spring-security-test")
+    }
+    ~~~
+- `ToDoListConfig` 클래스 생성
+  - Override Method를 통해 `configure` 함수 생성
+  - `.antMatchers("/css/**", "/js/**", "/image/**", "/register/**").permitAll().anyRequest().authenticated()` css,js,image,register를 제외한 나머지 url은 인증이 필요하다고 명시
+  ~~~ java
+  @Configuration
+  @EnableWebSecurity
+  public class ToDoListConfig extends WebSecurityConfigurerAdapter {
+
+      @Override
+      protected void configure(HttpSecurity http) throws Exception {
+          http.authorizeRequests()
+                .antMatchers("/css/**", "/js/**", "/image/**", "/register/**").permitAll()
+                .anyRequest().authenticated()
+            .and()
+                .formLogin()
+                .loginPage("/login")
+                .usernameParameter("id")
+                .successForwardUrl("/login")
+                .permitAll()
+            .and()
+                .logout()
+                .logoutSuccessUrl("/login")
+                .permitAll()
+            .and()
+                .csrf().disable();
+      }
+
+      @Bean
+      public PasswordEncoder passwordEncoder() {
+          return    PasswordEncoderFactories.createDelegatingPasswordEncoder();
+      }
+  }
+  ~~~
+
+- `UserService` 클래스 생성
+  - `public class UserService implements UserDetailsService`
+  ~~~ java
+  @Service
+  public class UserService implements UserDetailsService {
+
+      @Autowired
+      UserRepository userRepository;
+
+      @Autowired
+      PasswordEncoder passwordEncoder;
+
+      @Override
+      public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+          User user = userRepository.findById(id);
+
+          List<GrantedAuthority> authorities = new ArrayList<>();
+          authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+          return new org.springframework.security.core.userdetails.User(user.getId(), user.getPwd(), authorities);
+      }
+
+      public User findUser(String id) {
+          return userRepository.findById(id);
+      }
+
+      public User save(User user) {
+          user.setPwd(passwordEncoder.encode(user.getPwd()));
+          return userRepository.save(user);
+      }
+  }
+  ~~~
+- `ToDoListController` 변경
+  ~~~ java
+  @GetMapping("/list")
+    public String list(Model model) {
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        currentUser = userService.findUser(user.getUsername());
+        model.addAttribute("tdlList", toDoListService.findList(currentUser.getIdx()));
+        return "/tdl/list";
+    }
+  ~~~
