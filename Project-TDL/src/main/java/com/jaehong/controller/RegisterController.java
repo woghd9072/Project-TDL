@@ -1,6 +1,7 @@
 package com.jaehong.controller;
 
 import com.jaehong.domain.User;
+import com.jaehong.service.RegisterService;
 import com.jaehong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,9 @@ public class RegisterController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    RegisterService registerService;
+
     @GetMapping
     public String register() {
         return "/register";
@@ -30,5 +34,11 @@ public class RegisterController {
         User user = User.builder().id(map.get("id")).pwd(map.get("pwd")).email(map.get("email")).build();
         userService.save(user);
         return new ResponseEntity<>("{}", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/confirm")
+    public ResponseEntity<?> confirm(@RequestBody Map<String, String> map) {
+        System.out.println(map.get("id") + registerService.confirmId(map.get("id")));
+        return registerService.confirmId(map.get("id")) ? new ResponseEntity<>("{}", HttpStatus.BAD_REQUEST) : new ResponseEntity<>("{}", HttpStatus.OK);
     }
 }

@@ -13,6 +13,7 @@
                 <tr>
                     <td><label>ID</label></td>
                     <td><input type="text" id="id"></td>
+                    <td><input type="submit" id="confirm" value="Confirm"></td>
                 </tr>
                 <tr>
                     <td><label>PW</label></td>
@@ -32,25 +33,53 @@
 
 <script th:src="@{/js/jquery.min.js}"></script>
 <script>
-    $('#signup').click(function () {
-        var userData = JSON.stringify({
-            id: $('#id').val(),
-            pwd: $('#pwd').val(),
-            email: $('#email').val()
+    var n = 0;
+
+    $('#confirm').click(function () {
+        var idData = JSON.stringify({
+            id: $('#id').val()
         });
         $.ajax({
-            url: "/register",
+            async: true,
+            url: "/register/confirm",
             type: "POST",
-            data: userData,
+            data: idData,
             contentType: "application/json",
             dataType: "json",
             success: function () {
-                location.href = '/login';
+                alert('사용 가능한 아이디 입니다.');
+                n = 1;
             },
             error: function () {
-                alert('Nope!');
+                alert('이미 사용중인 아이디 입니다.');
             }
         });
+    });
+    $('#signup').click(function () {
+
+        if(n===0){
+            alert('아이디 중복체크를 해주세요');
+        } else if (n===1){
+            var userData = JSON.stringify({
+                id: $('#id').val(),
+                pwd: $('#pwd').val(),
+                email: $('#email').val()
+            });
+            $.ajax({
+                url: "/register",
+                type: "POST",
+                data: userData,
+                contentType: "application/json",
+                dataType: "json",
+                success: function () {
+                    location.href = '/login';
+                },
+                error: function () {
+                    alert('Nope!');
+                }
+            });
+
+        }
     });
 </script>
 </body>
