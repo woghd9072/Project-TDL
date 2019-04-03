@@ -134,6 +134,16 @@
 - `ToDoListConfig` 클래스 생성
   - Override Method를 통해 `configure` 함수 생성
   - `.antMatchers("/css/**", "/js/**", "/image/**", "/register/**").permitAll().anyRequest().authenticated()` css,js,image,register를 제외한 나머지 url은 인증이 필요하다고 명시
+  - `.successForwardUrl("/login")`을 사용하여 로그인 성공시 url을 줌
+  - `LoginController`에서 `login.html`로부터 form action을 통해 `@PostMapping` 해준 것을 `/tdl/list`로 redirect 해줌
+    ~~~ java
+    @PostMapping
+    public String loginSuccess() {
+        return "redirect:/tdl/list";
+    }
+    ~~~
+  - `.csrf().disable();`을 해줘야 등록이 됨 (Post가 되지 않기 때문)
+  - `PasswordEncoder`를 등록해줌
   ~~~ java
   @Configuration
   @EnableWebSecurity
@@ -167,6 +177,10 @@
 
 - `UserService` 클래스 생성
   - `public class UserService implements UserDetailsService`
+  - Override Method를 통해 `loadUserByUsername` 함수 생성
+  - 매개변수 id를 통해 사용자 객체를 찾아옴
+  - `authorities.add(new SimpleGrantedAuthority("ROLE_USER"));`로 권한을 부여해줌
+  - `org.springframework.security.core.userdetails.User`가 `UserDetails`를 상속받기 때문에 써줌
   ~~~ java
   @Service
   public class UserService implements UserDetailsService {
@@ -198,12 +212,92 @@
   }
   ~~~
 - `ToDoListController` 변경
+  - `org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();`를 통해 현재 사용자에 대한 객체를 받아옴
   ~~~ java
   @GetMapping("/list")
-    public String list(Model model) {
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        currentUser = userService.findUser(user.getUsername());
-        model.addAttribute("tdlList", toDoListService.findList(currentUser.getIdx()));
-        return "/tdl/list";
-    }
+  public String list(Model model) {
+      org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      currentUser = userService.findUser(user.getUsername());
+      model.addAttribute("tdlList", toDoListService.findList(currentUser.getIdx()));
+      return "/tdl/list";
+  }
   ~~~
+
+### Day16
+- 아이디 중복 검사 체크
+  - `RegisterService` 생성
+    - 가입하려는 id와 DB에 저장되있는 id가 일치하면 true, 불일치하면 false로 반환해줌
+    ~~~ java
+    @Service
+    public class RegisterService {
+
+      @Autowired
+      UserRepository userRepository;
+
+      public Boolean confirmId(String id) {
+          if (userRepository.findById(id) == null)
+              return false;
+          return id.equals(userRepository.findById(id).getId());
+      }
+    }
+    ~~~
+  - `RegisterController`에 `PostMapping` 추가
+    - `registerService.confirmId(map.get("id"))` 반환값이 true이면 `HttpStatus.BAD_REQUEST`로 해주고 false이면 `HttpStatus.OK`로 해줌
+    ~~~ java
+    @PostMapping("/confirm")
+    public ResponseEntity<?> confirm(@RequestBody Map<String, String> map) {
+        return registerService.confirmId(map.get("id")) ? new ResponseEntity<>("{}", HttpStatus.BAD_REQUEST) : new ResponseEntity<>("{}", HttpStatus.OK);
+    }
+    ~~~
+  - `ajax`를 통해 중복 검사 체크를 하지 않으면 체크를 해야 가입이 되도록 함
+    ~~~
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script>
+      var n = 0;
+
+      $('#confirm').click(function () {
+          var idData = JSON.stringify({
+              id: $('#id').val()
+          });
+          $.ajax({
+              async: true,
+              url: "/register/confirm",
+              type: "POST",
+              data: idData,
+              contentType: "application/json",
+              dataType: "json",
+              success: function () {
+                  alert('사용 가능한 아이디 입니다.');
+                  n = 1;
+              },
+              error: function () {
+                  alert('이미 사용중인 아이디 입니다.');
+              }
+          });
+      });
+      $('#signup').click(function () {
+          if(n===0){
+              alert('아이디 중복체크를 해주세요');
+          } else if (n===1){
+              var userData = JSON.stringify({
+                  id: $('#id').val(),
+                  pwd: $('#pwd').val(),
+                  email: $('#email').val()
+              });
+              $.ajax({
+                  url: "/register",
+                  type: "POST",
+                  data: userData,
+                  contentType: "application/json",
+                  dataType: "json",
+                  success: function () {
+                      location.href = '/login';
+                  },
+                  error: function () {
+                      alert('Nope!');
+                  }
+              });
+            }
+      });
+    </script>
+    ~~~
