@@ -213,6 +213,8 @@
   ~~~
 - `ToDoListController` 변경
   - `org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();`를 통해 현재 사용자에 대한 객체를 받아옴
+  - 받아온 객체에서 id값을 추출하기 위해 `user.getUsername()`을 해줌
+  - `user.getUsername()`을 통해 `UserRepository`에서 id에 해당하는 객체를 찾아와서 `currentUser`에 넣어줌
   ~~~ java
   @GetMapping("/list")
   public String list(Model model) {
