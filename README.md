@@ -303,3 +303,48 @@
       });
     </script>
     ~~~
+
+### Day17
+- `UserDto` 생성
+  - `@Getter` & `@Setter`를 위한 클래스
+  - `UserDto`가 받아온 값을 `User`로 set해줌
+    ~~~ java
+    @Getter
+    @Setter
+    @ToString
+    public class UserDto implements Serializable {
+
+        @NotBlank(message = "아이디를 입력하세요 ㅡㅡ")
+        private String id;
+
+        @NotBlank(message = "비밀번호를 입력하세요 ㅡㅡ")
+        private String pwd;
+
+        @NotBlank(message = "이메일을 입력하세요 ㅡㅡ")
+        @Email(message = "이메일 형식을 지키세요 ㅡㅡ")
+        private String email;
+
+        public User toEntity() {
+            User user = new User();
+            user.setId(this.id);
+            user.setEmail(this.email);
+            user.setPwd(this.pwd);
+            return user;
+        }
+    }
+    ~~~
+- `RegisterController` 변경
+  - `@Valid` 써줌
+  - `BindingResult`를 사용해서 메시지 출력
+    ~~~ java
+    @PostMapping
+    public ResponseEntity<?> postUser(@Valid @RequestBody UserDto userDto, BindingResult result) {
+        if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
+            return new ResponseEntity<>("{}", HttpStatus.BAD_REQUEST);
+        }
+        System.out.println(userDto);
+        userService.save(userDto.toEntity());
+        return new ResponseEntity<>("{}", HttpStatus.CREATED);
+    }
+    ~~~
