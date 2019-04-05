@@ -40,7 +40,6 @@
             id: $('#id').val()
         });
         $.ajax({
-            async: true,
             url: "/register/confirm",
             type: "POST",
             data: idData,
@@ -56,7 +55,6 @@
         });
     });
     $('#signup').click(function () {
-
         if(n===0){
             alert('아이디 중복체크를 해주세요');
         } else if (n===1){
@@ -78,7 +76,6 @@
                     alert('Nope!');
                 }
             });
-
         }
     });
 </script>
