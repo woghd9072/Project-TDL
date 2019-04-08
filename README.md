@@ -348,3 +348,112 @@
         return new ResponseEntity<>("{}", HttpStatus.CREATED);
     }
     ~~~
+
+### Day18
+- 버튼없이 Id와 Email 중복 검사
+  ~~~
+  <script th:src="@{/js/jquery.min.js}"></script>
+  <script>
+      var email = RegExp(/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/);
+      var id= RegExp(/^[a-zA-Z0-9]{4,12}$/);
+      var pw= RegExp(/^[a-zA-Z0-9]{4,12}$/);
+
+      var i = 0;
+      var e = 0;
+
+      $('#id').blur(function () {
+          if ($('#id').val()==="") {
+              $('#checkId').html('<p style="color:red">필수사항 입니다</p>');
+          }
+          else if (!id.test($('#id').val())) {
+              $('#checkId').html('<p style="color:red">형식에 맞게 입력해주세요</p>');
+          } else {
+              var idData = JSON.stringify({
+                  id: $('#id').val()
+              });
+              $.ajax({
+                  url: "/register/confirm/id",
+                  type: "POST",
+                  data: idData,
+                  contentType: "application/json",
+                  dataType: "json",
+                  success: function () {
+                      $('#checkId').html('<p style="color:green">사용 가능합니다</p>')
+                      i = 1;
+                  },
+                  error: function () {
+                      $('#checkId').html('<p style="color:red">이미 사용중입니다.</p>')
+                      i = 0;
+                  }
+              });
+          }
+      });
+      $('#pwd').blur(function () {
+          if ($('#pwd').val()==="") {
+              $('#checkPwd').html('<p style="color:red">필수사항 입니다</p>');
+          }else if (!pw.test($('#pwd').val())) {
+              $('#checkPwd').html('<p style="color:red">형식에 맞게 입력해주세요</p>');
+          } else
+              $('#checkPwd').html('<p style="color:green">사용 가능합니다</p>')
+      });
+      $('#email').blur(function () {
+          if ($('#email').val()==="") {
+              $('#checkEmail').html('<p style="color:red">필수사항 입니다</p>');
+          }
+          else if (!email.test($('#email').val())) {
+              $('#checkEmail').html('<p style="color:red">형식에 맞게 입력해주세요</p>');
+          } else {
+              var emailData = JSON.stringify({
+                  email: $('#email').val()
+              });
+              $.ajax({
+                  url: "/register/confirm/email",
+                  type: "POST",
+                  data: emailData,
+                  contentType: "application/json",
+                  dataType: "json",
+                  success: function () {
+                      $('#checkEmail').html('<p style="color:green">사용 가능합니다</p>')
+                      e = 1;
+                  },
+                  error: function () {
+                      $('#checkEmail').html('<p style="color:red">이미 사용중입니다.</p>')
+                      e = 0;
+                  }
+              });
+          }
+      });
+      $('#signup').click(function () {
+          if(i===0 || e===0){
+              $('#checkId').html('<p style="color:red">필수사항 입니다</p>');
+              $('#checkPwd').html('<p style="color:red">필수사항 입니다</p>');
+              $('#checkEmail').html('<p style="color:red">필수사항 입니다</p>');
+          } else if (i===1 || e===0){
+              var userData = JSON.stringify({
+                  id: $('#id').val(),
+                  pwd: $('#pwd').val(),
+                  email: $('#email').val()
+              });
+              $.ajax({
+                  url: "/register",
+                  type: "POST",
+                  data: userData,
+                  contentType: "application/json",
+                  dataType: "json",
+                  success: function () {
+                      location.href = '/login';
+                  },
+                  error: function () {
+                      alert('Nope!');
+                  }
+              });
+          }
+      });
+  </script>
+  ~~~
+- login 실패시 문구 출력
+  ~~~
+  <div th:if="${param.error}">
+      <p style="color: red">아이디와 비밀번호를 학인해주세요</p>
+  </div>
+  ~~~
