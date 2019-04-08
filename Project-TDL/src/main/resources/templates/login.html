@@ -3,56 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
-    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-    <div class="login_container">
+    <div class="container">
         <div class="wr">
-            <form th:action="@{/login}" method="post">
+            <form th:action="@{/login}" method="post" onsubmit="return check()">
                 <label for="id">ID</label>
                 <input id="id" type="text" name="id"></br></br>
                 <label for="pwd">PW</label>
                 <input id="pwd" type="password" name="password"></br></br>
+                <div th:if="${param.error}">
+                    <p style="color: red">아이디와 비밀번호를 학인해주세요</p>
+                </div>
                 <input id="signin" type="submit" value="sign in"></br></br></br>
                 <button><a href="/register">Sign Up</a></button>
             </form>
         </div>
     </div>
-<!--<script th:src="@{/js/jquery.min.js}"></script>-->
-<!--<script>-->
-    <!--$('#signin').click(function () {-->
-        <!--var userData = JSON.stringify({-->
-            <!--id: $('#id').val(),-->
-            <!--pwd: $('#pwd').val()-->
-        <!--});-->
-        <!--alert(userData);-->
-        <!--$.ajax({-->
-            <!--url: "/login",-->
-            <!--type: "POST",-->
-            <!--data: userData,-->
-            <!--contentType: "application/json",-->
-            <!--dataType: "json",-->
-            <!--success: function () {-->
-                <!--location.href = '/tdl/list'-->
-                <!--// $.ajax({-->
-                <!--//     url: "/tdl/user",-->
-                <!--//     type: "POST",-->
-                <!--//     data: userData,-->
-                <!--//     contentType: "application/json",-->
-                <!--//     dataType: "json",-->
-                <!--//     success: function () {-->
-                <!--//         location.href = '/tdl/list';-->
-                <!--//     },-->
-                <!--//     error: function () {-->
-                <!--//         alert("Nope!");-->
-                <!--//     }-->
-                <!--// });-->
-            <!--},-->
-            <!--error: function () {-->
-                <!--alert('아이디가 틀렸거나 등록된 아이디가 없습니다');-->
-            <!--}-->
-        <!--});-->
-    <!--});-->
-<!--</script>-->
 </body>
 </html>

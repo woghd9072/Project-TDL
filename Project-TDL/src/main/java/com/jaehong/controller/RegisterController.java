@@ -43,8 +43,13 @@ public class RegisterController {
         return new ResponseEntity<>("{}", HttpStatus.CREATED);
     }
 
-    @PostMapping("/confirm")
-    public ResponseEntity<?> confirm(@RequestBody Map<String, String> map) {
+    @PostMapping("/confirm/id")
+    public ResponseEntity<?> checkId(@RequestBody Map<String, String> map) {
         return registerService.confirmId(map.get("id")) ? new ResponseEntity<>("{}", HttpStatus.BAD_REQUEST) : new ResponseEntity<>("{}", HttpStatus.OK);
+    }
+
+    @PostMapping("/confirm/email")
+    public ResponseEntity<?> checkEmail(@RequestBody Map<String, String> map) {
+        return registerService.confirmEmail(map.get("email")) ? new ResponseEntity<>("{}", HttpStatus.BAD_REQUEST) : new ResponseEntity<>("{}", HttpStatus.OK);
     }
 }

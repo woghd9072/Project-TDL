@@ -15,4 +15,11 @@ public class RegisterService {
             return false;
         return id.equals(userRepository.findById(id).getId());
     }
+
+    public Boolean confirmEmail(String email) {
+        if ((userRepository.findByEmail(email)) == null) {
+            return false;
+        }
+        return email.equals(userRepository.findByEmail(email).getEmail());
+    }
 }

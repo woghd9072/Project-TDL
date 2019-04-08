@@ -3,61 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/register.css">
 </head>
 <body>
-<div class="register_container">
+<div class="container">
     <div class="wr">
         <form onsubmit="return false">
-            <table>
-                <tr>
-                    <td><label>ID</label></td>
-                    <td><input type="text" id="id"></td>
-                    <td><input type="submit" id="confirm" value="Confirm"></td>
-                </tr>
-                <tr>
-                    <td><label>PW</label></td>
-                    <td><input type="password" id="pwd"></td>
-                </tr>
-                <tr>
-                    <td><label>Email</label></td>
-                    <td><input type="text" id="email"></td>
-                </tr>
-                <tr>
-                    <td colspan="4" style="text-align: center"><input id="signup" type="submit" value="Sign Up"></td>
-                </tr>
-            </table>
+            <label>ID</label>
+            <input type="text" id="id">
+            <div id="checkId"></div>
+            <label>PW</label>
+            <input type="password" id="pwd">
+            <div id="checkPwd"></div>
+            <label>Email</label>
+            <input type="text" id="email">
+            <div id="checkEmail"></div>
+            <input id="signup" type="submit" value="Sign Up">
         </form>
     </div>
 </div>
 
 <script th:src="@{/js/jquery.min.js}"></script>
 <script>
-    var n = 0;
+    var email = RegExp(/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/);
+    var id= RegExp(/^[a-zA-Z0-9]{4,12}$/);
+    var pw= RegExp(/^[a-zA-Z0-9]{4,12}$/);
 
-    $('#confirm').click(function () {
-        var idData = JSON.stringify({
-            id: $('#id').val()
-        });
-        $.ajax({
-            url: "/register/confirm",
-            type: "POST",
-            data: idData,
-            contentType: "application/json",
-            dataType: "json",
-            success: function () {
-                alert('사용 가능한 아이디 입니다.');
-                n = 1;
-            },
-            error: function () {
-                alert('이미 사용중인 아이디 입니다.');
-            }
-        });
+    var i = 0;
+    var e = 0;
+
+    $('#id').blur(function () {
+        if ($('#id').val()==="") {
+            $('#checkId').html('<p style="color:red">필수사항 입니다</p>');
+        }
+        else if (!id.test($('#id').val())) {
+            $('#checkId').html('<p style="color:red">형식에 맞게 입력해주세요</p>');
+        } else {
+            var idData = JSON.stringify({
+                id: $('#id').val()
+            });
+            $.ajax({
+                url: "/register/confirm/id",
+                type: "POST",
+                data: idData,
+                contentType: "application/json",
+                dataType: "json",
+                success: function () {
+                    $('#checkId').html('<p style="color:green">사용 가능합니다</p>');
+                    i = 1;
+                },
+                error: function () {
+                    $('#checkId').html('<p style="color:red">이미 사용중입니다.</p>');
+                    i = 0;
+                }
+            });
+        }
+    });
+    $('#pwd').blur(function () {
+        if ($('#pwd').val()==="") {
+            $('#checkPwd').html('<p style="color:red">필수사항 입니다</p>');
+        }else if (!pw.test($('#pwd').val())) {
+            $('#checkPwd').html('<p style="color:red">형식에 맞게 입력해주세요</p>');
+        } else
+            $('#checkPwd').html('<p style="color:green">사용 가능합니다</p>');
+    });
+    $('#email').blur(function () {
+        if ($('#email').val()==="") {
+            $('#checkEmail').html('<p style="color:red">필수사항 입니다</p>');
+        }
+        else if (!email.test($('#email').val())) {
+            $('#checkEmail').html('<p style="color:red">형식에 맞게 입력해주세요</p>');
+        } else {
+            var emailData = JSON.stringify({
+                email: $('#email').val()
+            });
+            $.ajax({
+                url: "/register/confirm/email",
+                type: "POST",
+                data: emailData,
+                contentType: "application/json",
+                dataType: "json",
+                success: function () {
+                    $('#checkEmail').html('<p style="color:green">사용 가능합니다</p>');
+                    e = 1;
+                },
+                error: function () {
+                    $('#checkEmail').html('<p style="color:red">이미 사용중입니다.</p>');
+                    e = 0;
+                }
+            });
+        }
     });
     $('#signup').click(function () {
-        if(n===0){
-            alert('아이디 중복체크를 해주세요');
-        } else if (n===1){
+        if(i===0 || e===0){
+            $('#checkId').html('<p style="color:red">필수사항 입니다</p>');
+            $('#checkPwd').html('<p style="color:red">필수사항 입니다</p>');
+            $('#checkEmail').html('<p style="color:red">필수사항 입니다</p>');
+        } else if (i===1 || e===0){
             var userData = JSON.stringify({
                 id: $('#id').val(),
                 pwd: $('#pwd').val(),
