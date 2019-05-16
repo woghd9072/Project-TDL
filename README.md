@@ -521,3 +521,38 @@
   });
   ~~~
   - 입력창을 보여줌과 동시에 `ToDoListCommentController`에 해당 `idx`를 통해 `currentToDoList`를 찾음
+
+### Day20
+- View에 `comment` 출력
+  ~~~
+  <ul class="list_ul">
+      <li class="list_li" th:each="comment:${tdl.toDoListComment}">
+          <div class="column-left1" th:text="${comment.comment}" contenteditable="false"></div>
+          <div class="column-right1">
+              <span class="updateComment" th:data-idx="${comment.idx}">Edit</span>
+              <span class="deleteComment" th:data-idx="${comment.idx}">Delete</span>
+              <span class="date" th:text="${comment.updatedDate} ? ${#temporals.format(comment.updatedDate, 'yyyy-MM-dd')} : ${#temporals.format(comment.createdDate, 'yyyy-MM-dd')}"></span>
+          </div>
+      </li>
+  </ul>
+  ~~~
+  - `ToDoList`안에 `List<ToDoListComment>`를 `th:each`를 통해 반복하여 출력해줌
+- `comment` CRUD 구현
+  - `ToDoList` CRUD와 똑같이 구현
+  - Reload해야 보인다는 문제점 발생
+- `commentVO` 생성
+  - 그냥 `ToDoListComment`를 받아왔을때 연결된 다른 객체 정보들까지 받아오는 문제점이 생겨서 comment 만의 정보를 위한 `commentVO` 생성
+  ~~~ java
+  @Getter
+  @Setter
+  public class CommentVO implements Serializable {
+
+      private Integer idx;
+
+      private String comment;
+
+      private LocalDateTime createdDate;
+
+      private LocalDateTime updatedDate;
+  }
+  ~~~
