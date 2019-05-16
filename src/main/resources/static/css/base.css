@@ -1,0 +1,138 @@
+* {
+    margin: 0px;
+}
+html{
+    position: relative;
+    min-height: 100%;
+}
+body{
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f6f8fa;
+}
+.register {
+    margin-top: 3%;
+    text-align: center;
+}
+input {
+    border: 1px solid black;
+    padding: 1%;
+    border-radius: 5px;
+}
+#bar {
+    width: 35%;
+}
+.comment {
+    display: none;
+}
+.super_container {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2%;
+    width: 55%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+.container {
+    display: flex;
+}
+.list {
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+}
+.login_container {
+    background-color: #f6f8fa;
+    margin: 0 auto;
+    padding: 10%;
+    width: 30%;
+}
+.register_container {
+    background-color: #f6f8fa;
+    margin: 0 auto;
+    padding: 10%;
+    width: 30%;
+}
+.column-left {
+    flex: 4;
+}
+.column-left1 {
+    flex: 2;
+    text-align: left;
+}
+.column-right {
+    flex: 1;
+    text-align: right;
+}
+.column-right1 {
+    flex: 1;
+    text-align: right;
+}
+.list_li {
+    display: flex;
+    list-style: none;
+    padding: 2%;
+}
+.horizen {
+    width: 80%;
+}
+.material-icons.md-30 {
+    font-size: 30px;
+}
+.date {
+    color: lightgray;
+    padding-top: 3%;
+    margin-right: 5px;
+}
+.updateComment {
+    color: lightgray;
+    margin-right: 5px;
+}
+.deleteComment {
+    color: lightgray;
+    margin-right: 5px;
+}
+.headers {
+    background-color: black;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    width: 100%;
+}
+.head {
+    font-size: 30px;
+    color: white;
+    font-family: 'Sniglet', cursive;
+}
+#image {
+    text-align: left;
+}
+#id {
+    text-align: center;
+}
+#pwd {
+    text-align: center;
+}
+button {
+    border: 0;
+    padding: 0;
+    outline: 0;
+    background-color: white;
+}
+footer {
+    background-color: black;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    font-family: 'Sniglet', cursive;
+    font-size: 20px;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+}
+

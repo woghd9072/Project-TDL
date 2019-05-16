@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Project-TDL</title>
+    <link rel="stylesheet" href="/css/base.css?ver=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Sniglet" rel="stylesheet">
+</head>
+<body>
+<header class="headers">
+    <span class="head">
+        <a href="/logout"><img id="image" src="/image/home.png" width="50px"></a>
+        <span>To Do List</span>
+    </span>
+</header>
+<div class="wrapper">
+    <div class="register">
+        <form onsubmit="return false">
+            <input id="bar" type="text" style="background-color:transparent;" maxlength="35" value="Enter the Sentence" onclick="this.value='';">
+            <input id="insert" type="submit" value="Post">
+        </form>
+    </div>
+    <div class="super_container" th:each="tdl:${tdlList}">
+        <div class="container">
+            <div class="column-left">
+                <h1 class="description" th:text="${tdl.description}" contenteditable="false" th:maxlength="35"></h1>
+                <p class="date" th:text="${tdl.createdDate} ? ${#temporals.format(tdl.createdDate,'yyyy-MM-dd')} : ${tdl.createdDate}"></p>
+            </div>
+            <div class="column-right">
+                <h1 class="icon">
+                    <button class="status" th:value="${tdl.idx}" th:if="${tdl.status}"><i class="material-icons md-30">done_all</i></button>
+                    <button class="status" th:value="${tdl.idx}" th:if="!${tdl.status}"><i class="material-icons md-30">done</i></button>
+                    <button class="update" th:value="${tdl.idx}" th:if="!${tdl.status}"><i class="material-icons md-30">edit</i></button>
+                    <button class="delete" th:value="${tdl.idx}"><i class="material-icons md-30">delete</i></button>
+                </h1>
+                <p class="date" th:if="${tdl.status}" th:text="${tdl.completedDate} ? ${#temporals.format(tdl.completedDate,'yyyy-MM-dd')} : ${tdl.completedDate}"></p>
+                <h1><button class="show" th:value="${tdl.idx}"><i class="material-icons md-30">message</i></button></h1>
+            </div>
+        </div>
+        <div class="comment">
+            <hr class="horizen">
+            <div class="list">
+                <ul class="list_ul">
+                    <li class="list_li" th:each="comment:${tdl.toDoListComment}">
+                        <div class="column-left1" th:text="${comment.comment}" contenteditable="false"></div>
+                        <div class="column-right1">
+                            <span class="updateComment" th:data-idx="${comment.idx}">Edit</span>
+                            <span class="deleteComment" th:data-idx="${comment.idx}">Delete</span>
+                            <span class="date" th:text="${comment.updatedDate} ? ${#temporals.format(comment.updatedDate, 'yyyy-MM-dd')} : ${#temporals.format(comment.createdDate, 'yyyy-MM-dd')}"></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <form style="text-align: right" onsubmit="return false">
+                <input class="comments" type="text" maxlength="35">
+                <input class="post" type="submit" value="Post">
+            </form>
+        </div>
+    </div>
+</div>
+<footer>
+    <p>Copyright@2019 J.H.Shin All Rights Reserved.</p>
+</footer>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $(".show").click(function () {
+            var c = $(this).parent().parent().parent().parent().find('.comment');
+            var data = JSON.stringify({
+                idx: $(this).val()
+            });
+            $.ajax({
+                url: "/comment/add",
+                type: "POST",
+                data: data,
+                contentType: "application/json",
+                dataType: "json",
+                success: function () {
+                    if(c.is(":visible")) c.slideUp();
+                    else c.slideDown();
+                },
+                error: function () {
+                    alert('Nope!');
+                }
+            })
+        });
+    });
+</script>
+<script>
+    $('.post').click(function () {
+        var commentData = JSON.stringify({
+            comment: $('.comments').val()
+        });
+        var l = $(this).parent().parent().parent().find('.list_ul');
+        var input = $(this).parent().parent().parent().find('.comments');
+        $.ajax({
+            url: "/comment",
+            type: "POST",
+            data: commentData,
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                var text = document.createTextNode(data['comment']);
+                var date = data['createdDate'].toString();
+                var p = document.createElement('span');
+                var update = document.createElement('span');
+                var del = document.createElement('span');
+                var li = document.createElement('li');
+                var divleft = document.createElement('div');
+                var divright = document.createElement('div');
+                li.className = 'list_li';
+                divleft.className = 'column-left1';
+                divright.className = 'column-right1';
+                update.className = 'updateComment';
+                update.setAttribute('data-idx', data['idx']);
+                del.className = 'deleteComment';
+                del.setAttribute('data-idx', data['idx']);
+                p.className = 'date';
+                li.appendChild(divleft);
+                divleft.append(text);
+                li.appendChild(divright);
+                divright.appendChild(update).append(document.createTextNode('Edit'));
+                divright.appendChild(del).append(document.createTextNode('Delete'));
+                divright.appendChild(p).append(document.createTextNode(date.substring(0, 10) + ' ' + date.substring(11, 16)));
+                l.append(li);
+                input.val('');
+                input.focus();
+            },
+            error: function () {
+                alert('Nope!');
+            }
+        });
+    })
+
+    $(document).on('click', '.deleteComment', function () {
+        var idx = $(this).data('idx');
+        var l = $(this).parent().parent();
+
+        $.ajax({
+            url: "/comment/" + idx,
+            type: "DELETE",
+            contentType: "application/json",
+            success: function () {
+                l.remove();
+            },
+            error: function () {
+                alert('Nope!');
+            }
+        });
+    });
+
+    $(document).on('click', '.updateComment', function () {
+        var comment = $(this).parent().parent().find('.column-left1').attr('contenteditable');
+
+        if (comment==="true") {
+            var idx = $(this).data('idx');
+            var text = $(this).parent().parent().find('.column-left1').text();
+
+            $(this).html('Edit');
+            $(this).next().css('display', '');
+            $(this).next().next().css('display', '');
+
+            $.ajax({
+                url: "/comment/" + idx,
+                type: "PUT",
+                data: text,
+                contentType: "application/json",
+                dataType: 'text',
+                success: function () {
+                },
+                error: function () {
+                    alert('Nope!');
+                }
+            });
+            $(this).parent().parent().find('.column-left1').attr('contenteditable', false);
+        } else {
+            $(this).html('Complete');
+            $(this).next().css('display', 'none');
+            $(this).next().next().css('display', 'none');
+            $(this).parent().parent().find('.column-left1').attr('contenteditable', true);
+            $(this).parent().parent().find('.column-left1').trigger('focus');
+        }
+    });
+</script>
+<script>
+    $('#insert').click(function () {
+        var jsonData = JSON.stringify({
+            description: $('#bar').val(),
+            status: null,
+            createdDate: null,
+            completedDate: null
+        });
+        $.ajax({
+            url: "/tdl",
+            type: "POST",
+            data: jsonData,
+            contentType: "application/json",
+            dataType: "json",
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('Nope!');
+            }
+        });
+    });
+    $('.delete').click(function () {
+        var data = $(this).val();
+        $.ajax({
+            url: "/tdl/" + data,
+            type: "DELETE",
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('Nope!');
+            }
+        });
+    });
+    $('.update').click(function () {
+        var text = $(this).parent().parent().parent().find('.description').attr('contenteditable');
+
+        if (text==="true") {
+            var data = $(this).val();
+            var des = $(this).parent().parent().parent().find('.description').text();
+
+            $(this).prev().css('display', '');
+            $(this).next().css('display', '');
+            $(this).parent().parent().find('.show').css('display', '');
+            $(this).parent().parent().find('.date').css('display', '');
+
+            $.ajax({
+                url: "/tdl/" + data,
+                type: "PUT",
+                data: des,
+                contentType: "application/json",
+                dataType: 'text',
+                success: function () {
+                    location.reload();
+                },
+                error: function () {
+                    alert('Nope!');
+                }
+            });
+            $(this).parent().parent().parent().find('.description').attr('contenteditable', false);
+        } else {
+            $(this).parent().parent().parent().find('.description').attr('contenteditable', true);
+            $(this).parent().parent().parent().find('.description').trigger('focus');
+
+            $(this).prev().css('display', 'none');
+            $(this).next().css('display', 'none');
+            $(this).parent().parent().find('.show').css('display', 'none');
+            $(this).parent().parent().find('.date').css('display', 'none');
+        }
+    });
+    $('.status').click(function () {
+        var data = $(this).val();
+        $.ajax({
+            url: "/tdl/complete/" + data,
+            type: "PUT",
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert('Nope!');
+            }
+        });
+    });
+</script>
+</body>
+</html>
