@@ -457,3 +457,67 @@
       <p style="color: red">아이디와 비밀번호를 학인해주세요</p>
   </div>
   ~~~
+
+### Day19
+- comment 생성
+  ~~~ java
+  public class ToDoListComment implements Comparable<ToDoListComment> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Integer idx;
+
+    @Column
+    private String comment;
+
+    @Column
+    private LocalDateTime createdDate;
+
+    @Column
+    private LocalDateTime updatedDate;
+
+    @ManyToOne
+    private ToDoList toDoList;
+
+    @Builder
+    public ToDoListComment(String comment, LocalDateTime createdDate, LocalDateTime updatedDate, ToDoList toDoList) {
+        this.comment = comment;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
+        this.toDoList = toDoList;
+    }
+  }
+  ~~~
+- `ToDoList`와 `ToDoListComment`를 `@ManyToOne`,`@OneToMany`로 연관 관계 매핑
+  ~~~ java
+  @ManyToOne
+  private ToDoList toDoList;
+
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "toDoList")
+  private List<ToDoListComment> toDoListComment = new ArrayList<>();
+  ~~~
+- comment 입력창 띄우기
+  ~~~
+  $(".show").click(function () {
+      var c = $(this).parent().parent().parent().parent().find('.comment');
+      var data = JSON.stringify({
+          idx: $(this).val()
+      });
+      $.ajax({
+          url: "/comment/add",
+          type: "POST",
+          data: data,
+          contentType: "application/json",
+          dataType: "json",
+          success: function () {
+              if(c.is(":visible")) c.slideUp();
+              else c.slideDown();
+          },
+          error: function () {
+              alert('Nope!');
+          }
+      })
+  });
+  ~~~
+  - 입력창을 보여줌과 동시에 `ToDoListCommentController`에 해당 `idx`를 통해 `currentToDoList`를 찾음
