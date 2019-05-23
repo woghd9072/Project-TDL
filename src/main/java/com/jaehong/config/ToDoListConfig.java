@@ -21,7 +21,6 @@ public class ToDoListConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .usernameParameter("id")
-                .successForwardUrl("/login")
                 .permitAll()
             .and()
                 .logout()
