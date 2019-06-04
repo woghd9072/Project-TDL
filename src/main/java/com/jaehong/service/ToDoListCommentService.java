@@ -4,10 +4,12 @@ import com.jaehong.domain.CommentVO;
 import com.jaehong.domain.ToDoList;
 import com.jaehong.domain.ToDoListComment;
 import com.jaehong.repository.ToDoListCommentRepository;
+import com.jaehong.repository.ToDoListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Service
 public class ToDoListCommentService {
@@ -15,11 +17,17 @@ public class ToDoListCommentService {
     @Autowired
     ToDoListCommentRepository toDoListCommentRepository;
 
-    public CommentVO commentService(ToDoListComment toDoListComment, ToDoList currentToDoList) {
-        toDoListComment.setComment(toDoListComment.getComment());
+    @Autowired
+    ToDoListRepository toDoListRepository;
+
+    public CommentVO commentService(Map<String, String> map) {
+        ToDoListComment toDoListComment = new ToDoListComment();
+        ToDoList toDoList = toDoListRepository.findByIdx(Integer.parseInt(map.get("idx")));
+        toDoListComment.setComment(map.get("comment"));
         toDoListComment.setCreatedDate(LocalDateTime.now());
         toDoListComment.setUpdatedDate(null);
-        currentToDoList.add(toDoListComment);
+        toDoListComment.setToDoList(toDoList);
+        toDoList.add(toDoListComment);
         toDoListCommentRepository.save(toDoListComment);
 
         CommentVO commentVO = new CommentVO();

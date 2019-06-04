@@ -52,7 +52,7 @@
                     </li>
                 </ul>
             </div>
-            <form style="text-align: right" onsubmit="return false">
+            <form class="form" style="text-align: right" onsubmit="return false">
                 <input class="comments" type="text" maxlength="35">
                 <input class="post" type="submit" value="Post">
             </form>
@@ -68,30 +68,17 @@
     $(document).ready(function () {
         $(".show").click(function () {
             var c = $(this).parent().parent().parent().parent().find('.comment');
-            var data = JSON.stringify({
-                idx: $(this).val()
-            });
-            $.ajax({
-                url: "/comment/add",
-                type: "POST",
-                data: data,
-                contentType: "application/json",
-                dataType: "json",
-                success: function () {
-                    if(c.is(":visible")) c.slideUp();
-                    else c.slideDown();
-                },
-                error: function () {
-                    alert('Nope!');
-                }
-            })
+
+            if(c.is(":visible")) c.slideUp();
+            else c.slideDown();
         });
     });
 </script>
 <script>
     $('.post').click(function () {
         var commentData = JSON.stringify({
-            comment: $('.comments').val()
+            comment: $('.comments').val(),
+            idx: $(this).parent().parent().parent().parent().find('.show').val()
         });
         var l = $(this).parent().parent().parent().find('.list_ul');
         var input = $(this).parent().parent().parent().find('.comments');

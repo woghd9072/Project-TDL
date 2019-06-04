@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("/comment")
@@ -22,17 +24,9 @@ public class ToDoListCommentController {
     @Autowired
     ToDoListService toDoListService;
 
-    private ToDoList currentToDoList;
-
-    @PostMapping("/add")
-    public ResponseEntity<?> comment(@RequestBody ToDoList toDoList) {
-        currentToDoList = toDoListService.findTdl(toDoList.getIdx());
-        return new ResponseEntity<>("{}", HttpStatus.OK);
-    }
-
     @PostMapping
-    public ResponseEntity<?> postComment(@RequestBody ToDoListComment toDoListComment) {
-        CommentVO commentVO = toDoListCommentService.commentService(toDoListComment, currentToDoList);
+    public ResponseEntity<?> postComment(@RequestBody Map<String, String> map) {
+        CommentVO commentVO = toDoListCommentService.commentService(map);
         return new ResponseEntity<CommentVO>(commentVO, HttpStatus.CREATED);
     }
 
