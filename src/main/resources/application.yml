@@ -16,3 +16,11 @@ spring:
       enabled: true
   thymeleaf:
     cache: false
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 128MB
+      max-request-size: 128MB
+  batch:
+    job:
+      enabled: false

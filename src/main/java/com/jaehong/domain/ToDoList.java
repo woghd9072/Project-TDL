@@ -1,5 +1,6 @@
 package com.jaehong.domain;
 
+import com.jaehong.file.File;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,8 +34,11 @@ public class ToDoList implements Serializable {
     @Column
     private LocalDateTime completedDate;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "toDoList")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "toDoList")
     private List<ToDoListComment> toDoListComment = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "toDoList")
+    private List<File> file = new ArrayList<>();
 
     @ManyToOne
     private User user;
@@ -60,5 +64,10 @@ public class ToDoList implements Serializable {
     public void add(ToDoListComment toDoListComment1) {
         toDoListComment1.setToDoList(this);
         this.toDoListComment.add(toDoListComment1);
+    }
+
+    public void addFile(File files) {
+        files.setToDoList(this);
+        this.file.add(files);
     }
 }

@@ -1,8 +1,6 @@
 package com.jaehong.controller;
 
 import com.jaehong.domain.CommentVO;
-import com.jaehong.domain.ToDoList;
-import com.jaehong.domain.ToDoListComment;
 import com.jaehong.service.ToDoListCommentService;
 import com.jaehong.service.ToDoListService;
 import org.springframework.beans.factory.annotation.Autowired;
