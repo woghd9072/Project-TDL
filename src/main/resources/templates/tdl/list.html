@@ -97,6 +97,7 @@
             form: new FormData($(this).parent().find('.fileform')),
             idx: $(this).parent().parent().parent().parent().find('.file').val()
         })
+        alert(jsonData);
 
         $.ajax({
             url: "/upload",
@@ -106,7 +107,6 @@
             contentType: "multipart/form-data",
             dataType: "json",
             success: function () {
-                alert("Success");
             },
             error: function () {
                 alert('Nope!');
