@@ -36,7 +36,7 @@
                 </h1>
                 <p class="date" th:if="${tdl.status}" th:text="${tdl.completedDate} ? ${#temporals.format(tdl.completedDate,'yyyy-MM-dd')} : ${tdl.completedDate}"></p>
                 <h1><button class="show" th:value="${tdl.idx}"><i class="material-icons md-30">message</i></button></h1>
-                <h1><button class="file" th:value="${tdl.idx}"><i class="material-icons md-30">attach_file</i></button></h1>
+                <h1><button class="file"><a href="/upload"><i class="material-icons md-30">attach_file</i></a></button></h1>
             </div>
         </div>
         <div class="comment">
@@ -58,15 +58,6 @@
                 <input class="post" type="submit" value="Post">
             </form>
         </div>
-        <div class="files">
-            <div class="file-container" th:each="file:${tdl.file}">
-                <a th:href="${file.url}" th:text="${file.name}" />
-            </div>
-            <form class="fileform" enctype="multipart/form-data">
-                <input class="file-upload" type="file" name="file">
-                <input class="upload-files" type="submit" value="Upload">
-            </form>
-        </div>
     </div>
 </div>
 <footer>
@@ -82,37 +73,7 @@
             if(c.is(":visible")) c.slideUp();
             else c.slideDown();
         });
-
-        $(".file").click(function () {
-            var f = $(this).parent().parent().parent().parent().find('.files');
-
-            if(f.is(":visible")) f.slideUp();
-            else f.slideDown();
-        })
     });
-</script>
-<script>
-    $('.upload-files').click(function () {
-        var jsonData = JSON.stringify({
-            form: new FormData($(this).parent().find('.fileform')),
-            idx: $(this).parent().parent().parent().parent().find('.file').val()
-        })
-        alert(jsonData);
-
-        $.ajax({
-            url: "/upload",
-            type: "POST",
-            data: jsonData,
-            processType: false,
-            contentType: "multipart/form-data",
-            dataType: "json",
-            success: function () {
-            },
-            error: function () {
-                alert('Nope!');
-            }
-        });
-    })
 </script>
 <script>
     $('.post').click(function () {
