@@ -3,7 +3,7 @@ package com.jaehong.service;
 import com.jaehong.domain.ToDoList;
 import com.jaehong.domain.ToDoListComment;
 import com.jaehong.domain.User;
-import com.jaehong.repository.ToDoListCommentRepository;
+import com.jaehong.file.StorageService;
 import com.jaehong.repository.ToDoListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class ToDoListService {
     ToDoListRepository toDoListRepository;
 
     @Autowired
-    ToDoListCommentRepository toDoListCommentRepository;
+    StorageService storageService;
 
     public List<ToDoList> findList(Integer idx) {
         List<ToDoList> list = toDoListRepository.findByUserIdx(idx);
@@ -37,7 +37,6 @@ public class ToDoListService {
     public ToDoList postService(ToDoList toDoList, User currentUser) {
         toDoList.setCreatedDate(LocalDateTime.now());
         toDoList.setStatus(false);
-        toDoList.setToDoListComment(toDoListCommentRepository.findByToDoListIdx(toDoList.getIdx()));
         currentUser.add(toDoList);
         ToDoList postTDL = toDoListRepository.save(toDoList);
         return postTDL;
